@@ -1,2 +1,2 @@
-# consistency
-Implementation of Consistent Counterfactuals for Deep Model
+# Consistency
+Implementation of *Consistent Counterfactuals for Deep Model*
