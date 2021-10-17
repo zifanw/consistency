@@ -2,6 +2,8 @@
 
 Implementation of [*Consistent Counterfactuals for Deep Model*](https://arxiv.org/pdf/2110.03109.pdf) with TensorFlow 2.
 
+![Test Image 1](media/results.png)
+
 ## Setup
 
 ### Tensorflow Version 
@@ -64,7 +66,9 @@ pgd_iter_search = PGDsL2(model,
 pgd_cf, pred_cf, is_valid = pgd_iter_search(X_test[:128], num_interpolations=10, batch_size=64)
 ```
 
-For the full example, check out `example.ipynb`.
+For the full example, check out `example.ipynb`. 
+
+For the detail of hyper-parameters, check out the paper. The hyper-parameters used in the code block above are only for demonstration purpose.
 
 ## Evaluation 
 
