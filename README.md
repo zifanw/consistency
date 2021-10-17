@@ -33,11 +33,16 @@ sh get_data.sh
 Stable Neighbor Search can be easily plugged into the iterative adversarial methods provided in this repository. The following code demonstrates an example. 
 
 ```python3
-from attack import PGDsL2
-from attack import StableNeighborSearch
+from consistency import PGDsL2
+from consistency import StableNeighborSearch
+from utils import load_dataset
 
 # Load the tf.keras model
 model = load_your_model(...)
+
+# Load dataset  
+
+(X_train, y_train), (X_test, y_test), n_classes = load_dataset('Seizure', path_to_data_dir='dataset/data')
 
 # Configue the stable neighbor search parameters.
 sns_fn = StableNeighborSearch(model,
@@ -66,7 +71,7 @@ For the full example, check out `example.ipynb`.
 To evaluate the invalidation rate, one can use the following code.
 
 ```python3
-
+from utils import invalidation
 model_1 = load_your_other_model(...)
 
 iv = invalidation(pgd_cf,
