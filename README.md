@@ -1,8 +1,12 @@
 # Consistency
 
-Implementation of [*Consistent Counterfactuals for Deep Model*](https://arxiv.org/pdf/2110.03109.pdf)
+Implementation of [*Consistent Counterfactuals for Deep Model*](https://arxiv.org/pdf/2110.03109.pdf) with TensorFlow 2.
 
 ## Setup
+
+## Tensorflow Version 
+
+All code is tested under TF version `2.3.0`.
 
 ### Install the Dependency
 The following command will install `foolbox` and `data;ib`.
