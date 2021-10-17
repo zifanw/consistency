@@ -1,12 +1,9 @@
-import tensorflow as tf
 import numpy as np
-from tensorflow.python.types.core import Value
 
 from attack.attack_utils import IGD_L1
 from attack.attack_utils import IGD_L2
 from attack.attack_utils import PGDs
 from attack.attack_utils import SNS
-from attack.attack_utils import search_z_adv
 
 
 class Counterfactual(object):
@@ -74,7 +71,8 @@ class StableNeighborSearch(object):
                  sns_eps=0.3,
                  sns_nb_iters=100,
                  sns_eps_iter=1.e-3,
-                 n_interpolations=20):
+                 n_interpolations=20,
+                 batch_size=32):
 
         self.model = model
         self.clamp = clamp
@@ -83,6 +81,8 @@ class StableNeighborSearch(object):
         self.sns_nb_iters = sns_nb_iters
         self.sns_eps_iter = sns_eps_iter
         self.n_interpolations = n_interpolations
+        self.batch_size=batch_size
+        
 
     def __call__(self, x):
         adv_x, _, _ = SNS(
@@ -93,7 +93,7 @@ class StableNeighborSearch(object):
             num_class=self.num_classes,
             batch_size=self.batch_size,
             n_steps=self.n_interpolations,
-            max_steps=self.sns_nb_iter,
+            max_steps=self.sns_nb_iters,
             adv_epsilon=self.sns_eps,
             adv_step_size=self.sns_eps_iter)
         return adv_x
@@ -154,48 +154,3 @@ class PGDsL2(Counterfactual):
         else:
             adv_x = adv_x[is_adv]
             return adv_x
-
-
-class LatentSpaceSearch(Counterfactual):
-    """Summary goes here"""
-    def __init__(self, encoder_encoder, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.encoder_encoder = encoder_encoder
-
-    def generate_counterfactual(self, x, batch_size, **kwargs):
-        z = self.encoder_decoder.encode(x)
-        adv_x, _, _ = search_z_adv(self.encoder_decoder,
-                                   self.model,
-                                   x,
-                                   z,
-                                   self.y_sparse,
-                                   clamp=self.clamp,
-                                   num_class=self.num_classes,
-                                   batch_size=batch_size,
-                                   **kwargs)
-
-        return adv_x
-
-
-class Prototype(Counterfactual):
-    """Summary goes here"""
-    def __init__(self, cf, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.cf = cf
-
-    def generate_counterfactual(self, x, batch_size, **kwargs):
-
-        del batch_size
-
-        adv_x = []
-        c_labels = []
-
-        pb = tf.keras.utils.Progbar(target=x.shape[0])
-        for x_in in x:
-            explanation = self.cf.explain(x_in[None, :], **kwargs)
-            adv_x.append(explanation['cf']['X'])
-            c_labels.append(explanation['cf']['class'])
-            pb.add(1)
-        adv_x = np.vstack(adv_x)
-
-        return adv_x
