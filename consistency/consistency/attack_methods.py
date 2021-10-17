@@ -1,9 +1,9 @@
 import numpy as np
 
-from attack.attack_utils import IGD_L1
-from attack.attack_utils import IGD_L2
-from attack.attack_utils import PGDs
-from attack.attack_utils import SNS
+from consistency.attack_utils import IGD_L1
+from consistency.attack_utils import IGD_L2
+from consistency.attack_utils import PGDs
+from consistency.attack_utils import SNS
 
 
 class Counterfactual(object):
